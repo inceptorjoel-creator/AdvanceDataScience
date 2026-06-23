@@ -50,6 +50,8 @@ More specifically:
 | 0            | Customer repaid the loan       |
 | 1            | Customer defaulted on the loan |
 
+The target distribution is highly imbalanced: most customers repay their loans, while defaults are rare. Because of this, accuracy alone is not a reliable evaluation metric. The model should be evaluated using metrics that measure how well it identifies the default class.
+
 ---
 
 # Dataset Features
@@ -303,22 +305,67 @@ Suggested tools:
 
 # 8. Model Training
 
-Possible models to explore:
+This project is a binary classification problem with mixed numerical, categorical, ID-like, and date-based features. The most relevant classification methods are:
 
-* Logistic Regression
-* Decision Trees
-* Random Forest
-* XGBoost
-* LightGBM
-* CatBoost
+## Recommended Classifiers
+
+* **Logistic Regression**
+  * Strong baseline model for binary credit risk prediction
+  * Easy to interpret
+  * Works well with encoded categorical variables and scaled numerical features
+
+* **Decision Tree Classifier**
+  * Useful for understanding nonlinear decision rules
+  * Easy to visualize and explain
+  * Can overfit if not controlled with pruning or depth limits
+
+* **Random Forest Classifier**
+  * Stronger and more stable than a single decision tree
+  * Handles nonlinear relationships well
+  * Useful for feature importance analysis
+
+* **Gradient Boosting Models**
+  * Examples: XGBoost, LightGBM, CatBoost
+  * Usually strong performers for tabular credit-risk data
+  * CatBoost is especially useful when working with categorical features
+
+* **Voting Classifier**
+  * Can combine multiple models such as Logistic Regression, Random Forest, and Gradient Boosting
+  * Useful after individual models have been trained and compared
+
+## Optional Classifiers
+
+* **Support Vector Machines**
+  * Can be tested, especially linear SVM variants
+  * May be slower and harder to tune on larger tabular datasets
+
+* **Stochastic Gradient Descent Classifier**
+  * Fast linear classifier
+  * Useful for scalable baseline experiments
+
+## Less Relevant for This Project
+
+* **Nearest Neighbors**
+  * Sensitive to feature scaling and high-dimensional encoded categorical variables
+  * Usually not the best fit for this type of credit-risk dataset
+
+* **Gaussian Processes**
+  * Computationally expensive for this dataset size
+  * Not practical as a main model
+
+* **Multiclass and Multioutput Algorithms**
+  * Not needed because the target has only two classes: `0` and `1`
 
 Possible evaluation metrics:
 
-* Accuracy
 * Precision
 * Recall
 * F1-score
 * ROC-AUC
+* PR-AUC
+* Confusion Matrix
+
+Accuracy can still be reported, but it should not be the main metric because the default class is rare. For this project, recall and precision for the default class are especially important.
 
 ---
 
@@ -386,4 +433,4 @@ jupyter
 
 # Conclusion
 
-This project provides an end-to-end machine learning workflow for credit risk prediction. Students are expected to explore the dataset, engineer useful features, build classification models, evaluate performance, and deploy a working prediction system.
+This project provides an end-to-end binary classification workflow for credit risk prediction. Students are expected to explore the dataset, engineer useful features, train and compare relevant classification models, evaluate performance with imbalance-aware metrics, and deploy a working prediction system.
